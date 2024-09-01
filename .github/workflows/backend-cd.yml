@@ -82,7 +82,7 @@ jobs:
           env:
             REPOSITORY: backend
             IMAGE_TAG: latest
-            REGISTRY:
+            REGISTRY: 220611530126.dkr.ecr.us-east-1.amazonaws.com
           run: |
             docker build --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag $REGISTRY/$REPOSITORY:$IMAGE_TAG .
             docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG   

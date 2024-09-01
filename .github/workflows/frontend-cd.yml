@@ -102,7 +102,7 @@ jobs:
           env:
             REPOSITORY: frontend
             IMAGE_TAG: latest
-            REGISTRY:
+            REGISTRY: 220611530126.dkr.ecr.us-east-1.amazonaws.com
           run: |
             kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
             kustomize build | kubectl apply -f -
