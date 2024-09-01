@@ -1,0 +1,70 @@
+name: Backend Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:    
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+             
+      - name: Install dependencies
+        run: pipenv install
+        working-directory: starter/backend
+
+      - name: Run lint
+        run: pipenv run lint
+        working-directory: starter/backend
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+             
+      - name: Install dependencies
+        run: pipenv install
+        working-directory: starter/backend
+
+      - name: Run test
+        run: pipenv run test
+        working-directory: starter/backend
+
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint,test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+             
+      - name: Install dependencies
+        run: pipenv install
+        working-directory: starter/backend
+
+      - name: Building Docker image 
+        # Get this code from Step 4: Frontend Development Notes  
+          run: |
+            docker build --tag mp-backend:latest .
+          working-directory: starter/frontend   
