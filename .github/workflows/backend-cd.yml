@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-
-  workflow_dispatch:    
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -13,7 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
@@ -33,7 +32,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
@@ -47,10 +46,9 @@ jobs:
         run: pipenv run test
         working-directory: starter/backend
 
-
   build:
     runs-on: ubuntu-latest
-    needs: [lint,test]
+    needs: [lint, test]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -59,48 +57,43 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: '3.10'
-          
+
       - name: Install dependencies
         run: pipenv install
-        working-directory: starter/backend    
+        working-directory: starter/backend
 
-        - name: Configure AWS Credentials
-        # Take reference from Practice: Secrets 4.9 lecture no
-          uses: aws-actions/configure-aws-credentials@v2
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-session-token: ${{secrets.AWS_SESSION_TOKEN}}
-            aws-region: us-east-1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
 
-        - name: Login to Amazon ECR
-        # Source from https://github.com/marketplace/actions/amazon-ecr-login-action-for-github-actions
-          id: login-ecr
-          uses: aws-actions/amazon-ecr-login@v2   
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-        - name: Build  push docker image to Amazon ECR
-          env:
-            REPOSITORY: backend
-            IMAGE_TAG: latest
-            REGISTRY: 220611530126.dkr.ecr.us-east-1.amazonaws.com
-          run: |
-            docker build --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-            docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG   
-          working-directory: starter/backend  
+      - name: Build and push Docker image to Amazon ECR
+        env:
+          REPOSITORY: backend
+          IMAGE_TAG: latest
+          REGISTRY: 220611530126.dkr.ecr.us-east-1.amazonaws.com
+        run: |
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        working-directory: starter/backend
 
-        - name: Config kubect to use EKS closter
-          run: |
-            aws eks update-kubeconfig --name cluster  
+      - name: Configure kubectl to use EKS cluster
+        run: |
+          aws eks update-kubeconfig --name cluster
 
-        - name: Deploying to Kubernatives
-        # Source from Step 4: backend Development Notes
-          env:
-            REPOSITORY: backend
-            IMAGE_TAG: latest
-            REGISTRY: 220611530126.dkr.ecr.us-east-1.amazonaws.com
-          run: |
-            kustomize edit set image backend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
-            kustomize build | kubectl apply -f -
-          working-directory: starter/backend/k8s    
-          
-         
+      - name: Deploy to Kubernetes
+        env:
+          REPOSITORY: backend
+          IMAGE_TAG: latest
+          REGISTRY: 220611530126.dkr.ecr.us-east-1.amazonaws.com
+        run: |
+          kustomize edit set image backend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
+          kustomize build | kubectl apply -f -
+        working-directory: starter/backend/k8s

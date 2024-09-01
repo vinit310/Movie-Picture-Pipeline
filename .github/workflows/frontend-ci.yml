@@ -1,11 +1,10 @@
-name: Frontend Continous Integration
+name: Frontend Continuous Integration
 
 on:
   pull_request:
     branches:
       - main
-
-  workflow_dispatch:    
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -13,14 +12,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Set up Node.js 
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
           cache: 'npm'
           cache-dependency-path: starter/frontend/package-lock.json
-      
+
       - name: Install dependencies
         run: npm ci
         working-directory: starter/frontend
@@ -36,42 +35,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js 
+      - name: Set up Node.js
         uses: actions/setup-node@v3
-          with:
-            node-version: 18
-            cache: 'npm'
-            cache-dependency-path: starter/frontend/package-lock.json
-        
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: starter/frontend/package-lock.json
+
       - name: Install dependencies
-          run: npm ci
-          working-directory: starter/frontend  
+        run: npm ci
+        working-directory: starter/frontend
 
       - name: Run test
-          run: npm run test
-          working-directory: starter/frontend    
+        run: npm run test
+        working-directory: starter/frontend
 
   build:
     runs-on: ubuntu-latest
-    needs: [lint,test]
+    needs: [lint, test]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js 
-          uses: actions/setup-node@v3
-          with:
-            node-version: 18
-            cache: 'npm'
-            cache-dependency-path: starter/frontend/package-lock.json
-        
-      - name: Install dependencies
-          run: npm ci
-          working-directory: starter/frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: starter/frontend/package-lock.json
 
-      - name: Building Docker image 
-        # Get this code from Step 4: Frontend Development Notes  
-          run: |
-            docker build --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag=mp-frontend:latest .
-            docker run --name mp-frontend -p 3000:3000 -d mp-frontend
-          working-directory: starter/frontend     
+      - name: Install dependencies
+        run: npm ci
+        working-directory: starter/frontend
+
+      - name: Build Docker image
+        run: |
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag mp-frontend:latest .
+          docker run --name mp-frontend -p 3000:3000 -d mp-frontend
+        working-directory: starter/frontend
