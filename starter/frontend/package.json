@@ -16,7 +16,6 @@
   "scripts": {
     "serve": "serve -s build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns",
@@ -25,23 +24,8 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest",
-      "plugin:prettier/recommended",
-      "prettier"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "singleQuote": true,
-          "jsxSingleQuote": false,
-          "printWidth": 120
-        }
-      ]
-    }
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -60,8 +44,6 @@
     "eslint": "^8.34.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
-    "jest": "^27.5.1",
-    "prettier": "^3.0.0",
-    "eslint-config-prettier": "^8.3.0"
+    "jest": "^27.5.1"
   }
 }
