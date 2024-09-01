@@ -16,6 +16,7 @@
   "scripts": {
     "serve": "serve -s build",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",  // Added script to fix linting issues
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns",
@@ -24,8 +25,23 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "plugin:prettier/recommended",  // Added Prettier integration
+      "prettier"  // Ensures Prettier is the last config
+    ],
+    "plugins": [
+      "prettier"  // Ensures Prettier plugin is used
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true,
+          "jsxSingleQuote": false,
+          "printWidth": 120
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [
@@ -44,6 +60,8 @@
     "eslint": "^8.34.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "prettier": "^3.0.0",  // Added Prettier as a devDependency
+    "eslint-config-prettier": "^8.3.0"  // Added Prettier config for ESLint
   }
 }

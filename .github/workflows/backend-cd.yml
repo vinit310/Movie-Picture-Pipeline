@@ -21,6 +21,9 @@ jobs:
       - name: Install pipenv
         run: pip install pipenv    
 
+      - name: Install flake8
+        run: pip install flake8    
+
       - name: Install dependencies
         run: pipenv install
         working-directory: starter/backend
@@ -44,6 +47,9 @@ jobs:
       - name: Install pipenv
         run: pip install pipenv    
 
+      - name: Install flake8
+        run: pip install flake8    
+
       - name: Install dependencies
         run: pipenv install
         working-directory: starter/backend
@@ -63,6 +69,12 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: '3.10'
+
+      - name: Install pipenv
+        run: pip install pipenv    
+
+      - name: Install flake8
+        run: pip install flake8    
 
       - name: Install dependencies
         run: pipenv install

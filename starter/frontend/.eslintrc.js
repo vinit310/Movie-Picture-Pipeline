@@ -3,7 +3,8 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
-    'plugin:prettier/recommended', // Integrate Prettier with ESLint
+    'plugin:prettier/recommended', // Ensure this is included
+    'prettier',  // Add this line to extend prettier
   ],
   plugins: ['react', 'prettier'],
   settings: {
