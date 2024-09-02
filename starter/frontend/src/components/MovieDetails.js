@@ -1,29 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 
-function MovieList({ onMovieClick }) {
-  const [movies, setMovies] = useState([]);
-
+function MovieDetail({ movie }) {
+  const [details, setDetails] = useState(null);
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_MOVIE_API_URL}/movies`).then((response) => {
-      setMovies(response.data.movies);
+    axios.get(`${process.env.REACT_APP_MOVIE_API_URL}/movies/${movie.id}`).then((response) => {
+      setDetails(response.data);
     });
-  }, []);
+  }, [movie]);
 
   return (
-    <ul>
-      {movies.map((movie) => (
-        <li className="movieItem" key={movie.id} onClick={() => onMovieClick(movie)}>
-          {movie.title}
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h2>{details?.movie.title}</h2>
+      <p>{details?.movie.description}</p>
+    </div>
   );
 }
 
-MovieList.propTypes = {
-  onMovieClick: PropTypes.func.isRequired,
-};
-
-export default MovieList;
+export default MovieDetail;
