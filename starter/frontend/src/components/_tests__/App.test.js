@@ -1,12 +1,17 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-
 import App from '../../App';
 
-const movieHeading = process.env.FAIL_TEST ? 'WRONG_HEADING' : 'Movie List';
+describe('App Component', () => {
+  const defaultHeading = 'Movie List';
+  const incorrectHeading = 'WRONG_HEADING';
+  const headingText = process.env.FAIL_TEST ? incorrectHeading : defaultHeading;
 
-test('renders Movie List heading', () => {
-  render(<App />);
-  const linkElement = screen.getByText(movieHeading);
-  expect(linkElement).toBeInTheDocument();
+  test(`renders ${headingText} heading`, () => {
+    render(<App />);
+    const headingElement = screen.getByText(headingText);
+
+    // Assert that the heading element is present in the document
+    expect(headingElement).toBeInTheDocument();
+  });
 });
