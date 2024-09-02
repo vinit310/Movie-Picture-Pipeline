@@ -24,12 +24,10 @@ module.exports = {
     'prettier/prettier': [
       'error',
       {
-        "trailingComma": "none",
-        "semi": true,
-        "tabWidth": 2,
-        "singleQuote": false,
-        "bracketSpacing": true,
-        "jsxBracketSameLine": true
+        singleQuote: true,
+        jsxSingleQuote: false,
+        printWidth: 120,
+        parser: 'babel-ts',
       },
     ],
     // Customize your rules here
