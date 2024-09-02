@@ -92,7 +92,7 @@ jobs:
 
       - name: Configure kubectl to use EKS cluster
         run: |
-          aws eks update-kubeconfig --name cluster
+          aws eks update-kubeconfig --name clusters
 
       - name: Deploy to Kubernetes
         env:
